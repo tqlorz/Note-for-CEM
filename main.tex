@@ -1,0 +1,48 @@
+\documentclass[lang=cn,newtx,10pt,scheme=chinese]{elegantbook}
+
+\title{计算电磁学}
+\subtitle{学习笔记}
+
+\author{曾申昊}
+\institute{浙江大学}
+\date{\today}
+\version{1}
+\bioinfo{自定义}{信息}
+
+\extrainfo{正在施工中！}
+
+\setcounter{tocdepth}{3}
+
+\logo{logo-blue.png}
+\cover{cover.jpg}
+
+% 本文档命令
+\usepackage{array}
+\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
+
+% 修改标题页的橙色带
+\definecolor{customcolor}{RGB}{32,178,170}
+\colorlet{coverlinecolor}{customcolor}
+\usepackage{cprotect}
+
+\addbibresource[location=local]{reference.bib} % 参考文献
+
+\begin{document}
+
+\maketitle
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+% 正文内容
+\input{chapter/chapter1.tex}
+\input{chapter/chapter2.tex}
+\input{chapter/chapter3.tex}
+\input{chapter/chapter4.tex}
+\input{chapter/appendix.tex}
+
+\printbibliography[heading=bibintoc, title=\ebibname]
+
+\end{document}
