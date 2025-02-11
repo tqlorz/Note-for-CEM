@@ -61,12 +61,12 @@
     两式相加，我们有
     \begin{equation*}
         f(x+\Delta x)+f(x-\Delta x)=2f(x)+f''(x)(\Delta x)^2 
-        +\mathcal{O}((\Delta x)^4)
+        +\mathcal{O}\Big((\Delta x)^4\Big)
     \end{equation*}
     故
     \begin{equation*}
         f''(x)=\frac{f(x+\Delta x)-2f(x)+f(x-\Delta x)}{(\Delta x)^2}
-        +\mathcal{O}((\Delta x)^2)
+        +\mathcal{O}\Big((\Delta x)^2\Big)
     \end{equation*}
     因此该公式具有二阶精度。
 \end{solution}
@@ -400,17 +400,18 @@
 有不同。这将导致波解的相位出现误差，这种现象称为\textbf{数值色散}，其造成的误差称为数值相
 位误差。
 
+\par 对于一维波动方程，假设平面波沿 $x$ 方向传播，其解析表达式为
+\begin{equation}
+    \mathscr{E}_z(x,t)=\text{Re}\Big[E_0e^{j(\omega t-kx)}\Big]
+\end{equation}
+\par 在有限差分网格上，数值离散的波可以表示为
+\begin{equation}
+    \mathscr{E}^n_z(i)=\text{Re}\Big[E_0e^{j(\omega n \Delta t-\tilde{k} i\Delta x)}\Big]
+    \label{数值波解}
+\end{equation}
+
 \begin{theorem}{一维数值色散}
-    对于一维波动方程，假设平面波沿 $x$ 方向传播，其解析表达式为
-    \begin{equation}
-        \mathscr{E}_z(x,t)=\text{Re}\Big[E_0e^{j(\omega t-kx)}\Big]
-    \end{equation}
-    在有限差分网格上，数值离散的波可以表示为
-    \begin{equation}
-        \mathscr{E}^n_z(i)=\text{Re}\Big[E_0e^{j(\omega n \Delta t-\tilde{k} i\Delta x)}\Big]
-        \label{数值波解}
-    \end{equation}
-    则该公式的数值相位误差为
+    定理 \ref{thm:波动方程时间步进公式} 中给出公式的数值相位误差为
     \begin{equation}
         \frac{\tilde{k}-k}{k}
         \approx\frac{1}{24}\Big[(k\Delta x)^2-(\omega \Delta t)^2\Big]

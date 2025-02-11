@@ -24,6 +24,9 @@
 \colorlet{coverlinecolor}{customcolor}
 \usepackage{cprotect}
 
+% 显示 \mathscr 的小写字体
+\usepackage[scr=boondox]{mathalpha}
+
 \addbibresource[location=local]{reference.bib} % 参考文献
 
 \begin{document}
@@ -37,7 +40,7 @@
 
 % 正文内容
 \input{chapter/chapter1.tex}
-\input{chapter/chapter2.tex}
+% \input{chapter/chapter2.tex}
 \input{chapter/chapter3.tex}
 \input{chapter/chapter4.tex}
 \input{chapter/appendix.tex}
