@@ -1,1 +1,868 @@
 \chapter{矩量法}
+
+\section{矩量法概述}
+
+\par Maxwell 方程的解可以通过不同的方式得到。
+除偏微分方程之外，也可以求解从 Maxwell 方程出发导出的积分
+方程。
+
+\par 例如，对于静电场问题，可以用 Green 函数法推导积分方程。
+如果希望求解一块金属导体的电容，可以先建立一个积分方程来求解
+导体表面的电荷。使用 Green 函数法，由线性叠加原理，可以写出
+由金属导体表面电荷产生的总电势，即
+\begin{equation}
+    \varphi(\vec{r}) = 
+    \iint_{S} G(\vec{r}, \vec{r}') \varrho_s(\vec{r}') \text{d}S'
+    =\iint_{S} \frac{1}{4\pi\epsilon\left|\vec{r}-\vec{r}'\right|} 
+    \varrho_s(\vec{r}') \text{d}S'
+\end{equation}
+\par 其中，$S$ 为金属体表面，
+$\varrho_s(\vec{r}')$ 为金属表面的面电荷密度，
+$\varphi(\vec{r})$ 为由面电荷产生的电势。
+\par 在金属表面 $S$ 上，$\varphi(\vec{r})$
+必须为常数，记为 $\Phi$，由此有
+\begin{equation}
+    \Phi = 
+    \iint_{S} G(\vec{r}, \vec{r}') \varrho_s(\vec{r}') \text{d}S'
+    \qquad
+    \vec{r} \in S
+    \label{金属表面积分方程}
+\end{equation}
+\par 上式就是一个积分方程，式中 $\Phi$ 为已知常数，
+$G(\vec{r}, \vec{r}')$ 为已知函数，而 $\varrho_s(\vec{r}')$ 则为未知的金
+属表面电荷密度，通过求解此积分方程可以得到 $\varrho_s(\vec{r}')$。
+\par 为了使式 (\ref{金属表面积分方程}) 能使用计算机求解，可以用矩
+量法在有限维子空间中对其解进行近似。首先，选择一组基函数用于
+对 $\varrho_s(\vec{r}')$ 的近似，即
+\begin{equation}
+    \varrho_s(\vec{r}') = \sum_{j=1}^{N} c_j v_j(\vec{r}')
+    \label{矩量法基函数展开}
+\end{equation}
+\par 其中，$v_j(\vec{r}')$ 为基函数，$c_j$ 为待定系数。
+\par 选定基函数后，将式 (\ref{矩量法基函数展开}) 代人式 (\ref{金属表面积分方程})，
+得到一个有限自由度的方程
+\begin{equation}
+    \sum_{j=1}^{N} c_j 
+    \iint_{S} G(\vec{r}, \vec{r}') v_j(\vec{r}') \text{d}S'
+    =\Phi
+    \qquad
+    \vec{r} \in S
+    \label{矩量法方程}
+\end{equation}
+\par 为了求解 $c_j$，需要把上式转换为矩阵方程。
+为此，选择一组函数 $w_1(\vec{r}),w_2(\vec{r}),\cdots,w_N(\vec{r})$，在
+式 (\ref{矩量法方程}) 等号两边相乘，然后在整个 $S$ 面上进行积分，得到
+\begin{equation}
+    \sum_{j=1}^{N} c_j 
+    \iint_{S} w_i(\vec{r})
+    \iint_{S} G(\vec{r}, \vec{r}') v_j(\vec{r}') \text{d}S' \text{d}S
+    =
+    \iint_{S} w_i(\vec{r})
+    \Phi \text{d}S
+    \qquad
+    i=1,2,\cdots,N
+    \label{矩量法矩阵方程}
+\end{equation}
+\par 此方程可写成更紧凑的形式
+\begin{equation}
+    \sum_{j=1}^{N}
+    A_{ij} c_j = b_i
+    \qquad
+    i=1,2,\cdots,N
+\end{equation}
+
+\begin{definition}{脉冲基函数}
+    若划分的单元足够小，则每个面元上的电荷密度 $\varrho_s(\vec{r}')$ 可以认为是常数。这相当于
+    使用下面的公式定义的零阶基函数
+    \begin{equation}
+        v_j(\vec{r}')=
+        \left\{
+            \begin{aligned}
+                &1 \qquad \vec{r}' \in S_j \\
+                &0 \qquad \vec{r}' \notin S_j
+            \end{aligned}
+        \right.
+    \end{equation}
+    其中，$S_j$ 为第 $j$ 个面元。
+\end{definition}
+
+\begin{definition}{点配置}
+    需要选择一组检验函数 $w_i(\vec{r})$，最简单的选择是 $\delta$ 函数
+    \begin{equation}
+        w_i(\vec{r})=\delta(\vec{r}-\vec{r}_i)
+    \end{equation}
+    其中，$\vec{r}_i$ 为第 $i$ 个面元的中心。
+\end{definition}
+
+\begin{definition}{子域配置}
+    除了 $\delta$ 函数，也可以选择零阶函数作为检验函数
+    \begin{equation}
+        w_i(\vec{r})=
+        \left\{
+            \begin{aligned}
+                &1 \qquad \vec{r} \in S_i \\
+                &0 \qquad \vec{r} \notin S_i
+            \end{aligned}
+        \right.
+    \end{equation}
+\end{definition}
+
+\begin{theorem}
+    对于式 (\ref{矩量法矩阵方程}) 给出的方程，
+    若选择脉冲基函数和点配置，矩阵元素 $A_{ij}$ 和 $b_i$ 可以表示为
+    \begin{align}
+        \label{矩量法矩阵元素-1}
+        A_{ij} &= \iint_{S_j} G(\vec{r}_i, \vec{r}') \text{d}S'\\
+        b_i &= \Phi
+    \end{align}
+    式 (\ref{矩量法矩阵元素-1}) 的积分项可以用中点法进行数值积分计算，
+    计算得到结果为
+    \begin{equation}
+        A_{ij} = 
+        \left\{
+            \begin{aligned}
+                &\frac{1}{4\pi\epsilon}\frac{S_j}{\left|
+                    \vec{r}_i-\vec{r}_j
+                \right|} \qquad i \neq j \\
+                &\frac{1}{2\epsilon}
+                \sqrt{\frac{S_j}{\pi}} \qquad i = j
+            \end{aligned}
+        \right.
+    \end{equation}
+    其中，$\left|
+        \vec{r}_i-\vec{r}_j
+    \right|=\sqrt{(x_i-x_j)^2+(y_i-y_j)^2+(z_i-z_j)^2}$。
+\end{theorem}
+
+\begin{theorem}
+    对于式 (\ref{矩量法矩阵方程}) 给出的方程，
+    若选择脉冲基函数和子域配置，矩阵元素 $A_{ij}$ 和 $b_i$ 可以表示为
+    \begin{align}
+        A_{ij} &= 
+        \iint_{S_i}
+        \iint_{S_j} G(\vec{r}, \vec{r}') 
+        \text{d}S' \text{d}S\\
+        b_i &= \Phi S_i
+    \end{align}
+\end{theorem}
+
+\par 求得 $c_j$ 之后，由于使用的是脉冲基函数，金属体上的总电荷可以用下式计算
+\begin{equation}
+    Q = \iint_{S} \varrho_s(\vec{r}') \text{d}S'
+    =\sum_{j=1}^{N} c_j S_j
+\end{equation}
+
+\section{二维分析}
+
+\subsection{积分方程的建立}
+
+\par 考虑自由空间中的源 $f(\vec{\rho})$ 产生的标量波，而在此空间中有一个形状任
+意的散射体。假设源和物体沿 $z$ 轴无变化，因此只需考虑任意一个垂直于 $z$ 轴的平面。
+在散射体外部，波函数 $\varphi(\vec{\rho})$ 满足非齐次 Helmholtz 方程
+\begin{equation}
+    \nabla^2 \varphi(\vec{\rho}) + k_0^2 \varphi(\vec{\rho}) = f(\vec{\rho})
+    \qquad
+    \vec{\rho} \in \Omega_{\infty}
+    \label{非齐次 Helmholtz 方程}
+\end{equation}
+\par 其中，$k_0$ 为波数，$\Omega_{\infty}$ 为散射体外部的区域。
+波函数也应满足辐射条件
+\begin{equation}
+    \sqrt{\rho} \left[
+        \frac{\partial \varphi(\vec{\rho})}{\partial \rho}
+        -j k_0 \varphi(\vec{\rho})
+    \right] = 0
+    \qquad
+    \rho \rightarrow \infty
+    \label{辐射条件}
+\end{equation}
+\par 为了建立此问题的
+积分方程，我们需要得到自由空间格林函数 $G_0$，它满足非齐次 Helmholtz 方程
+\begin{equation}
+    \nabla^2 G_0(\vec{\rho}, \vec{\rho}') + k_0^2 G_0(\vec{\rho}, \vec{\rho}') 
+    = -\delta(\vec{\rho}-\vec{\rho}')
+    \label{自由空间格林函数}
+\end{equation}
+\par 以及式 (\ref{辐射条件}) 的辐射条件。可以得到
+\begin{equation}
+    G_0(\vec{\rho}, \vec{\rho}') = 
+    \frac{1}{4j}H_0^{(2)}
+    \Big(
+        k_0 \left|\vec{\rho}-\vec{\rho}'\right|
+    \Big)
+\end{equation}
+\par 其中，$H_0^{(2)}$ 为零阶第二类 Hankel 函数。
+\par 将式 (\ref{自由空间格林函数}) 乘以 $G_0$
+并将式 (\ref{非齐次 Helmholtz 方程}) 乘以 $\varphi$，
+然后对所得两式之差在整个外部区域上积分，得到
+\begin{equation}
+    \begin{aligned}
+        \iint_{\Omega_{\infty}}&\Big[
+            G_0(\vec{\rho}, \vec{\rho}') \nabla^2 \varphi(\vec{\rho})
+            -\varphi(\vec{\rho}) \nabla^2 G_0(\vec{\rho}, \vec{\rho}')
+        \Big]\text{d}\Omega\\
+        &=\iint_{\Omega_{s}}
+        G_0(\vec{\rho}, \vec{\rho}') f(\vec{\rho}) \text{d}\Omega
+        +\iint_{\Omega_{\infty}}
+        \varphi(\vec{\rho}) \delta(\vec{\rho}-\vec{\rho}') \text{d}\Omega
+    \end{aligned}
+\end{equation}
+\par 其中，$\Omega_{s}$ 为源所在区域。应用第二标量 Green 公式
+\begin{equation}
+    \int_{\Omega} 
+    (a\nabla^2 b-b\nabla^2 a)
+    \text{d}\Omega
+    =\oint_{\Gamma}
+    \left(
+        a \frac{\partial b}{\partial n}
+        -b \frac{\partial a}{\partial n}
+    \right)
+    \text{d}\Gamma
+\end{equation}
+\par 其中，$\Gamma$ 为区域 $\Omega$ 的边界，可以得到
+\begin{equation}
+    \begin{aligned}
+        \oint_{\Gamma_0}&\left[
+            \varphi(\vec{\rho}) \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial n}
+            -G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho})}{\partial n}
+        \right]
+        \text{d}\Gamma\\
+        &+\oint_{\Gamma_{\infty}}\left[
+            G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho})}{\partial \rho}
+            -\varphi(\vec{\rho}) \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial \rho}
+        \right]
+        \text{d}\Gamma\\
+        &-\iint_{\Omega_{s}}
+        G_0(\vec{\rho}, \vec{\rho}') f(\vec{\rho}) \text{d}\Omega
+        =
+        \iint_{\Omega_{\infty}}
+        \varphi(\vec{\rho}) \delta(\vec{\rho}-\vec{\rho}') \text{d}\Omega
+    \end{aligned}
+\end{equation}
+\par 其中，$\Gamma_0$ 表示物体的边界，$\Gamma_{\infty}$ 表示无穷远处的边界。
+\par 由于 $G_0$ 和 $\varphi$ 均满足辐射条件，故在 $\Gamma_{\infty}$ 上的边界积分项为零。
+由 $\delta$ 函数的定义，可以得到
+\begin{equation}
+    \begin{aligned}
+        \oint_{\Gamma_0}&\left[
+            \varphi(\vec{\rho}) \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial n}
+            -G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho})}{\partial n}
+        \right]
+        \text{d}\Gamma
+        -\iint_{\Omega_{s}}
+        G_0(\vec{\rho}, \vec{\rho}') f(\vec{\rho}) \text{d}\Omega\\
+        &=\left\{
+            \begin{aligned}
+                \varphi(\vec{\rho}') \qquad &\vec{\rho}' \in \Omega_{\infty} \\
+                0 \qquad \quad &\vec{\rho}' \in \Omega_{0}
+            \end{aligned}
+        \right.
+    \end{aligned}
+\end{equation}
+\par 其中，$\Omega_0$ 为物体的内部区域。交换 $\vec{\rho}$ 
+和 $\vec{\rho}'$，并利用 $G_0$ 的对称性，有
+\begin{equation}
+    \begin{aligned}
+        \oint_{\Gamma_0}&\left[
+            \varphi(\vec{\rho}') \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial n'}
+            -G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho}')}{\partial n'}
+        \right]
+        \text{d}\Gamma'
+        -\iint_{\Omega_{s}}
+        G_0(\vec{\rho}, \vec{\rho}') f(\vec{\rho}') \text{d}\Omega'\\
+        &=\left\{
+            \begin{aligned}
+                \varphi(\vec{\rho}) \qquad &\vec{\rho} \in \Omega_{\infty} \\
+                0 \quad \quad \ \ \ &\vec{\rho} \in \Omega_{0}
+            \end{aligned}
+        \right.
+    \end{aligned}
+    \label{标量场 Huygens 原理}
+\end{equation}
+
+\begin{theorem}{标量场 Huygens 原理}
+    在式 (\ref{标量场 Huygens 原理}) 中，
+    当散射体不存在时，边界积分项为零。因此
+    \begin{equation}
+        \varphi(\rho) =
+        -\iint_{\Omega_{s}}
+        G_0(\vec{\rho}, \vec{\rho}') f(\vec{\rho}') \text{d}\Omega'
+    \end{equation}
+    此项称为入射波，记为 $\varphi^{\text{inc}}(\vec{\rho})$。
+    式 (\ref{标量场 Huygens 原理}) 可以写为
+    \begin{equation}
+        \varphi^{\text{inc}}(\vec{\rho}) +
+        \oint_{\Gamma_0}\left[
+            \varphi(\vec{\rho}') \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial n'}
+            -G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho}')}{\partial n'}
+        \right]
+        \text{d}\Gamma'
+        =\left\{
+            \begin{aligned}
+                \varphi(\vec{\rho}) \qquad &\vec{\rho} \in \Omega_{\infty} \\
+                0 \quad \quad \ \ \ &\vec{\rho} \in \Omega_{0}
+            \end{aligned}
+        \right.
+        \label{标量场 Huygens 原理数学表示}
+    \end{equation}
+\end{theorem}
+
+\par 为了从式 (\ref{标量场 Huygens 原理数学表示}) 建立积分
+方程，我们需要将其应用于边界 $\Gamma_0$。
+然而，当 $\vec{\rho}$ 位于边界 $\Gamma_0$ 上时，
+$H_0^{(2)}\Big(k_0\left|\vec{\rho}-\vec{\rho}'\right|\Big)$ 及其导数在自变量为零时是奇异的。
+\par 为了处理这一奇异性问题，
+首先将 $\Gamma_0$ 分成两部分，一部分是 $\Gamma_0-2\epsilon$，
+另一部分是圆心位于 $\vec{\rho}$ 且半径为 $\epsilon$ 的半圆，
+然后令 $\epsilon\rightarrow 0$，这样就有
+\begin{equation}
+    \oint_{\Gamma_0}[\bullet]\text{d}\Gamma'
+    =\lim_{\epsilon\rightarrow 0}
+    \left\{
+        \int_{\Gamma_0-2\epsilon}[\bullet]\text{d}\Gamma'
+        +\int_{0}^{\pi}[\bullet]\epsilon\text{d}\phi
+    \right\}
+\end{equation}
+\par 等号右边的第一个积分项
+是一个沿 $\Gamma_0$ 但不包含奇异点的积分。对于第二个积分项，有
+\begin{equation}
+    \lim_{\epsilon\rightarrow 0}
+    \int_{0}^{\pi}[\bullet]\epsilon\text{d}\phi
+    =\frac{1}{4j}
+    \lim_{\epsilon\rightarrow 0}
+    \int_{0}^{\pi}\left[
+        \varphi(\vec{\rho}') \frac{\partial H_0^{(2)}(k\epsilon)}{\partial \epsilon}
+        -H_0^{(2)}(k\epsilon) \frac{\partial \varphi(\vec{\rho}')}{\partial n'}
+    \right]\epsilon\text{d}\phi
+\end{equation}
+\par 由于 $\epsilon\rightarrow 0$ 时有
+\begin{equation}
+    H_0^{(2)}(z) \approx 
+    1 - j\frac{2}{\pi}\ln\left(
+        \frac{\gamma z}{2}
+    \right) 
+    \qquad
+    \gamma = 1.7810724
+\end{equation}
+\par 可以得到
+\begin{equation}
+    \lim_{\epsilon\rightarrow 0}
+    \int_{0}^{\pi}[\bullet]\epsilon\text{d}\phi
+    =-\frac{1}{2}\varphi(\vec{\rho})
+    \label{奇异积分项}
+\end{equation}
+\par 将式 (\ref{奇异积分项}) 代入式 (\ref{标量场 Huygens 原理数学表示})，
+得到积分方程
+\begin{equation}
+    \varphi^{\text{inc}}(\vec{\rho}) +
+    \oint_{\Gamma_0}\left[
+        \varphi(\vec{\rho}') \frac{\partial G_0(\vec{\rho}, \vec{\rho}')}{\partial n'}
+        -G_0(\vec{\rho}, \vec{\rho'}) \frac{\partial \varphi(\vec{\rho}')}{\partial n'}
+    \right]
+    \text{d}\Gamma'
+    =\frac{1}{2}\varphi(\vec{\rho})
+    \qquad
+    \vec{\rho} \in \Gamma_0
+    \label{标量场积分方程}
+\end{equation}
+
+\subsection{导电柱体的散射}
+
+\subsection{导体条带的散射}
+
+\subsection{均匀介质柱体的散射}
+
+\section{三维分析}
+
+\subsection{积分方程的建立}
+
+\par 考虑自由空间中由电流密度为 $\vec{J}_{\text{imp}}$ 的源产生的被任意形状物体散射的电
+磁场问题。其总场 $\vec{E}$ 和 $\vec{H}$ 满足矢量波动方程
+\begin{gather}
+    \label{矢量波动方程-1}
+    \nabla \times \nabla \times \vec{E}(\vec{r}) - k_0^2 \vec{E}(\vec{r})
+    = -jk_0Z_0 \vec{J}_{\text{imp}}(\vec{r}) \\
+    \label{矢量波动方程-2}
+    \nabla \times \nabla \times \vec{H}(\vec{r}) - k_0^2 \vec{H}(\vec{r})
+    = \nabla \times \vec{J}_{\text{imp}}(\vec{r})
+\end{gather}
+\par 其中，$V_{\infty}$ 表示物体以外的区域。
+同时，$\vec{E}$ 和 $\vec{H}$ 也满足在无穷远处
+的 Sommerfeld 辐射条件
+\begin{equation}
+    r\left[
+        \nabla \times
+        \begin{pmatrix}
+            \vec{E}\\
+            \vec{H}
+        \end{pmatrix}
+        +jk_0\vec{r} \times
+        \begin{pmatrix}
+            \vec{E}\\
+            \vec{H}
+        \end{pmatrix}
+    \right]=0
+    \qquad
+    r\rightarrow\infty
+    \label{Sommerfeld 辐射条件}
+\end{equation}
+\par 为了推导 $\vec{E}$ 和 $\vec{H}$ 的积分方程，
+我们引入三维空间中的 Green 函
+数 $G_0$，其满足标量 Helmholtz 方程
+\begin{equation}
+    \label{三维空间中的 Green 函数方程}
+    \nabla^2 G_0(\vec{r}, \vec{r}') + k_0^2 G_0(\vec{r}, \vec{r}') 
+    = -\delta(\vec{r}-\vec{r}')
+\end{equation}
+\par 以及 Sommerfeld 辐射条件
+\begin{equation}
+    r \left[
+        \frac{\partial G_0(\vec{r}, \vec{r}')}{\partial r}
+        +j k_0 G_0(\vec{r}, \vec{r}')
+    \right] = 0
+    \qquad
+    r \rightarrow \infty
+    \label{Green 函数的 Sommerfeld 辐射条件}
+\end{equation}
+\par 其解为
+\begin{equation}
+    G_0(\vec{r}, \vec{r}') = 
+    \frac{e^{-jk_0\left|\vec{r}-\vec{r}'\right|}}{4\pi\left|\vec{r}-\vec{r}'\right|}
+\end{equation}
+\par 接下来利用标量-矢量 Green 定理
+\begin{equation}
+    \begin{aligned}
+        \iiint_V &\Big[
+            b(\nabla\times\nabla\times a)
+            +a\nabla^2 b
+            +(\nabla \cdot a)\nabla b
+        \Big]\text{d}V\\
+        =
+        &\oiint_S \Big[
+            (\vec{n}\cdot a)\nabla b
+            +(\vec{n}\times a)\times\nabla b
+            +(\vec{n}\times\nabla\times a)b
+        \Big]\text{d}S
+    \end{aligned}
+\end{equation}
+\par 令 $V=V_{\infty}$，$\vec{a}=\vec{E}$，$b=G_0$，得到
+\begin{equation}
+    \label{标量-矢量 Green 定理应用}
+    \begin{aligned}
+        \iiint_{V_{\infty}} &\Big[
+            G_0(\nabla\times\nabla\times \vec{E})
+            +\vec{E}\nabla^2 G_0
+            +(\nabla \cdot \vec{E})\nabla G_0
+        \Big]\text{d}V\\
+        =
+        &\oiint_{S_{\infty}} \Big[
+            (\vec{r}\cdot \vec{E})\nabla G_0
+            +(\vec{r}\times \vec{E})\times\nabla G_0
+            +(\vec{r}\times\nabla\times \vec{E})G_0
+        \Big]\text{d}S\\
+        &-
+        \oiint_{S_0} \Big[
+            (\vec{n}\cdot \vec{E})\nabla G_0
+            +(\vec{n}\times \vec{E})\times\nabla G_0
+            +(\vec{n}\times\nabla\times \vec{E})G_0
+        \Big]\text{d}S\\
+    \end{aligned}
+\end{equation}
+\par 使用式 (\ref{矢量波动方程-1}) 和式 (\ref{三维空间中的 Green 函数方程})，
+式 (\ref{标量-矢量 Green 定理应用}) 的左边变为
+\begin{equation}
+    \begin{aligned}
+        \text{LHS}
+        =\iiint_{V_{\infty}} &\left[
+            -jk_0Z_0 \vec{J}_{\text{imp}} G_0 
+            -\vec{E}\delta(\vec{r}-\vec{r}')
+            +\frac{jZ_0}{k_0}(\nabla \cdot \vec{J}_{\text{imp}})
+            \nabla G_0
+        \right]\text{d}V\\
+        =
+        &-jk_0Z_0\iiint_{V_{s}} \left[
+            \vec{J}_{\text{imp}} G_0
+            -\frac{1}{k_0^2}(\nabla \cdot \vec{J}_{\text{imp}})
+            \nabla G_0
+        \right]\text{d}V
+        -
+        \left\{
+            \begin{aligned}
+                \vec{E}(\vec{r}')  \qquad &\vec{r}' \in V_{\infty} \\
+                \vec{0} \ \ \ \qquad &\vec{r}' \in V_{0}
+            \end{aligned}
+        \right.
+    \end{aligned}
+\end{equation}
+\par 其中，$V_{s}$ 为源所在区域。
+使用式 (\ref{Sommerfeld 辐射条件}) 和式 (\ref{Green 函数的 Sommerfeld 辐射条件})，
+可以证明式 (\ref{标量-矢量 Green 定理应用}) 的右边第一项为零。
+因此式 (\ref{标量-矢量 Green 定理应用}) 变为
+\begin{equation}
+    \begin{aligned}
+        \oiint_{S_0} &\Big[
+            (\vec{n}\cdot \vec{E})\nabla G_0
+            +(\vec{n}\times \vec{E})\times\nabla G_0
+            +(\vec{n}\times\nabla\times \vec{E})G_0
+        \Big]\text{d}S\\
+        &-jk_0Z_0\iiint_{V_{s}} \left[
+            \vec{J}_{\text{imp}} G_0
+            -\frac{1}{k_0^2}(\nabla \cdot \vec{J}_{\text{imp}})
+            \nabla G_0
+        \right]\text{d}V
+        =\left\{
+            \begin{aligned}
+                \vec{E}(\vec{r}') \qquad &\vec{r}' \in V_{\infty} \\
+                \vec{0} \ \ \ \qquad &\vec{r}' \in V_{0}
+            \end{aligned}
+        \right.
+    \end{aligned}
+    \label{三维积分方程}
+\end{equation}
+\par 交换带撇和不带撇的坐标后，上式可以写为
+\begin{equation}
+    \begin{aligned}
+        \oiint_{S_0} &\Big[
+            (\vec{n}'\cdot \vec{E})\nabla' G_0
+            +(\vec{n}'\times \vec{E})\times\nabla' G_0
+            -jk_0Z_0(\vec{n}'\times\vec{H})G_0
+        \Big]\text{d}S'\\
+        &-jk_0Z_0\iiint_{V_{s}} \left[
+            \vec{J}_{\text{imp}} G_0
+            -\frac{1}{k_0^2}(\nabla' \cdot \vec{J}_{\text{imp}})
+            \nabla' G_0
+        \right]\text{d}V'
+        =\left\{
+            \begin{aligned}
+                \vec{E}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+                \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+            \end{aligned}
+        \right.
+    \end{aligned}
+    \label{三维积分方程变式}
+\end{equation}
+
+\begin{theorem}{三维电场积分方程}
+    在式 (\ref{三维积分方程变式}) 中，
+    当散射体不存在时，边界积分项为零。因此
+    \begin{equation}
+        \vec{E}(\vec{r}) =
+        -jk_0Z_0\iiint_{V_{s}} \left[
+            \vec{J}_{\text{imp}} G_0
+            -\frac{1}{k_0^2}(\nabla' \cdot \vec{J}_{\text{imp}})
+            \nabla' G_0
+        \right]\text{d}V'
+    \end{equation}
+    此项称为入射场，记为 $\vec{E}^{\text{inc}}(\vec{r})$。
+    式 (\ref{三维积分方程变式}) 可以写为
+    \begin{equation}
+        \begin{aligned}
+            \vec{E}^{\text{inc}}(\vec{r})
+            &-\oiint_{S_0} \Big[
+                (\vec{n}'\cdot \vec{E})\nabla G_0
+                +(\vec{n}'\times \vec{E})\times\nabla G_0
+                +jk_0Z_0(\vec{n}'\times\vec{H})G_0
+            \Big]\text{d}S'\\
+            &=\left\{
+                \begin{aligned}
+                    \vec{E}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+                    \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+                \end{aligned}
+            \right.
+            \label{三维电场积分方程-1}
+        \end{aligned}
+    \end{equation}
+    在得到上式的过程中，使用了
+    $\nabla'G_0=-\nabla G_0$。
+
+    根据面矢量分析，可以证明
+    \begin{equation}
+        \vec{n}'\cdot\vec{E}
+        =\frac{jZ_0}{k_0}\nabla'\cdot(\vec{n}'\times\vec{H})
+    \end{equation}
+    式 (\ref{三维电场积分方程-1}) 可以写为
+    \begin{equation}
+        \begin{aligned}
+            \vec{E}^{\text{inc}}(\vec{r})
+            &-\oiint_{S_0} \left[
+                \frac{jZ_0}{k_0}\nabla'\cdot(\vec{n}'\times\vec{H})\nabla G_0
+                +(\vec{n}'\times \vec{E})\times\nabla G_0
+                +jk_0Z_0(\vec{n}'\times\vec{H})G_0
+            \right]\text{d}S'\\
+            &=\left\{
+                \begin{aligned}
+                    \vec{E}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+                    \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+                \end{aligned}
+            \right.
+        \end{aligned}
+        \label{三维电场积分方程-2}
+    \end{equation}
+\end{theorem}
+
+\begin{theorem}{三维磁场积分方程}
+    类似地，可以得到
+    \begin{equation}
+        \begin{aligned}
+            \vec{H}^{\text{inc}}(\vec{r})
+            &-\oiint_{S_0} \left[
+                \frac{Y_0}{jk_0}\nabla'\cdot(\vec{n}'\times\vec{E})\nabla G_0
+                +(\vec{n}'\times \vec{H})\times\nabla G_0
+                -jk_0Y_0(\vec{n}'\times\vec{E})G_0
+            \right]\text{d}S'\\
+            &=\left\{
+                \begin{aligned}
+                    \vec{H}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+                    \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+                \end{aligned}
+            \right.
+        \end{aligned}
+        \label{三维磁场积分方程}
+    \end{equation}
+    其中
+    \begin{equation}
+        \vec{H}^{\text{inc}}(\vec{r})
+        =\iiint_{V_s}\vec{J}_{\text{imp}}\times\nabla' G_0\text{d}V'
+    \end{equation}
+\end{theorem}
+
+\begin{definition}
+    定义算子
+    \begin{align}
+        \label{矩量法算子定义-1}
+        \mathcal{L}(\vec{X})
+        &=jk_0\oiint_{S_0} \left[
+            \vec{X}(\vec{r}')G_0(\vec{r}, \vec{r}')
+            +\frac{1}{k_0^2}\nabla' \cdot \vec{X}(\vec{r}')
+            \nabla' G_0(\vec{r}, \vec{r}')
+        \right]\text{d}S'\\
+        \label{矩量法算子定义-2}
+        \mathcal{K}(\vec{X})
+        &=\oiint_{S_0}
+            \vec{X}(\vec{r}')\times\nabla' G_0(\vec{r}, \vec{r}')
+        \text{d}S'
+    \end{align}
+    并引入等效面电流和面磁流
+    \begin{equation}
+        \vec{J}_s(\vec{r}')
+        =\vec{n}'\times\vec{H}(\vec{r}')
+        \qquad
+        \vec{M}_s(\vec{r}')
+        =\vec{E}(\vec{r}')\times\vec{n}'
+    \end{equation}
+\end{definition}
+
+\par 式 (\ref{三维电场积分方程-2}) 和式 (\ref{三维磁场积分方程}) 可以写为
+\begin{equation}
+    \vec{E}^{\text{inc}}(\vec{r})-\mathcal{L}(\vec{\bar{J}}_s)
+    +\mathcal{K}(\vec{M}_s)=
+    \left\{
+        \begin{aligned}
+            \vec{E}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+            \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+        \end{aligned}
+    \right.
+    \label{表面电场积分方程}
+\end{equation}
+\begin{equation}
+    \vec{\bar{H}}^{\text{inc}}(\vec{r})-\mathcal{L}(\vec{M}_s)
+    -\mathcal{K}(\vec{\bar{J}}_s)=
+    \left\{
+        \begin{aligned}
+            \vec{\bar{H}}(\vec{r}) \qquad &\vec{r} \in V_{\infty} \\
+            \vec{0} \ \ \ \qquad &\vec{r} \in V_{0}
+        \end{aligned}
+    \right.
+    \label{表面磁场积分方程}
+\end{equation}
+\par 为了使方程形式更简洁，
+我们按比例缩放了电流密度 $(\vec{\bar{J}}_s=Z_0\vec{J}_s)$ 
+和磁场强度 $(\vec{\bar{H}}=Z_0\vec{H})$。
+\par 我们可以将这两个式子
+叉乘 $\vec{n}$，然后令 $\vec{r}$ 趋近于 $S_0$，
+以此建立积分方程来求解 $\vec{\bar{J}}_s$ 和
+$\vec{M}_s$。同二维情况一样，我们需要处理在表面上时
+$\mathcal{L}(\vec{X})$ 和 $\mathcal{K}(\vec{X})$ 的奇异性。
+\par 将面 $S_0$ 分成两部分：
+一部分是 $S_0$ 减去以 $\vec{r}$ 为中心的
+一个无限小圆片，另一部分是半径为 $\epsilon$ 的无限小半
+球面。因此
+\begin{align}
+    \mathcal{L}(\vec{X})
+    &=\lim_{\epsilon\rightarrow 0}
+    \left\{
+        \iint_{S_0-\sigma_{\epsilon}}
+        [\bullet]\text{d}S'
+        +\int_{0}^{2\pi}
+        \int_{0}^{\frac{\pi}{2}}
+        [\bullet]\epsilon^2 \sin\theta \text{d}\theta\text{d}\phi
+    \right\}\\
+    \mathcal{K}(\vec{X})
+    &=\lim_{\epsilon\rightarrow 0}
+    \left\{
+        \iint_{S_0-\sigma_{\epsilon}}
+        [\bullet]\text{d}S'
+        +\int_{0}^{2\pi}
+        \int_{0}^{\frac{\pi}{2}}
+        [\bullet]\epsilon^2 \sin\theta \text{d}\theta\text{d}\phi
+    \right\}
+\end{align}
+\par 奇异项对计算 $\vec{n}\times \mathcal{L}(\vec{X})$ 没有贡献，
+而在 $\vec{n}\times \mathcal{K}(\vec{X})$ 中则不为零。
+为了计算此项，令
+$\vec{X}=\vec{n}\times \vec{Y}$，并考虑
+\begin{equation}
+    \begin{aligned}
+        \vec{n}\times \int_{0}^{2\pi}
+        \int_{0}^{\frac{\pi}{2}}
+        \vec{X}\times\nabla G_0 \epsilon^2 \sin\theta \text{d}\theta\text{d}\phi
+        &=
+        \pm \vec{n}\times \int_{0}^{2\pi}
+        \int_{0}^{\frac{\pi}{2}}
+        (\vec{n}\times\vec{Y})\times \vec{r}' 
+        \frac{e^{-jk_0\epsilon}}{4\pi}
+        \sin \theta \text{d}\theta\text{d}\phi\\
+        &=
+        \pm \vec{n}\times \int_{0}^{2\pi}
+        \int_{0}^{\frac{\pi}{2}}
+        (\vec{n}'\cdot\vec{r}')\vec{Y} \frac{e^{-jk_0\epsilon}}{4\pi}
+        \sin \theta \text{d}\theta\text{d}\phi\\
+        &=
+        \pm \vec{n}\times 
+        \int_{0}^{2\pi} \int_{0}^{\frac{\pi}{2}}
+        \vec{Y} \frac{e^{-jk_0\epsilon}}{4\pi}
+        \sin \theta \text{d}\theta\text{d}\phi\\
+        &=\pm \frac{1}{2} \vec{X}
+        \qquad
+        \epsilon\rightarrow 0
+    \end{aligned}
+\end{equation}
+\par 其中，$\vec{r}'$ 是半球面的单位法向矢量。
+因此，$\vec{n}\times\mathcal{K}(\vec{X})$ 可写为
+\begin{equation}
+    \vec{n}\times \mathcal{K}(\vec{X})
+    =\vec{n}\times \tilde{\mathcal{K}}(\vec{X})
+    \pm \frac{1}{2}\vec{X}
+    \label{矩量法奇异积分}
+\end{equation}
+\par 式中的 $\tilde{\mathcal{K}}(\vec{X})$ 与
+式 (\ref{矩量法算子定义-2}) 中的积分相同，
+只是去除了奇异点 $\vec{r}=\vec{r}'$。
+\par 式 (\ref{表面电场积分方程}) 和
+式 (\ref{表面磁场积分方程}) 与 $\vec{n}$ 叉乘，
+并利用式 (\ref{矩量法奇异积分})，得到
+\begin{align}
+    \frac{1}{2}\vec{M}_s
+    -\vec{n}\times\mathcal{L}(\vec{\bar{J}}_s)
+    +\vec{n}\times\tilde{\mathcal{K}}(\vec{M}_s)
+    &=-\vec{n}\times\vec{E}^{\text{inc}}
+    \qquad
+    \vec{r}\in S_0\\
+    \frac{1}{2}\vec{\bar{J}}_s
+    +\vec{n}\times\mathcal{L}(\vec{M}_s)
+    +\vec{n}\times\tilde{\mathcal{K}}(\vec{\bar{J}}_s)
+    &=\vec{n}\times\vec{\bar{H}}^{\text{inc}}
+    \qquad \ \ 
+    \vec{r}\in S_0
+\end{align}
+
+\section{时域矩量法}
+
+\subsection{时域积分方程}
+
+\par 时域矩量法分析首先需要建立时域积分方程。
+这可以通过对频域积分方程进行 Fourier 逆变换来得到。
+考虑一个导电体的散射问
+题，它的电场积分方程可以写为
+\begin{equation}
+    \vec{n}\times
+    \oiint_{S_0} \Big[
+        (jk_0)^2\vec{\bar{J}}_s(\vec{r}')G_0(\vec{r}, \vec{r}')
+        -\nabla'\cdot\vec{\bar{J}}_s(\vec{r}')\nabla G_0(\vec{r}, \vec{r}')
+    \Big]\text{d}S'
+    =jk_0\vec{n}\times\vec{E}^{\text{inc}}(\vec{r})
+\end{equation}
+\par 进行 Fourier 逆变换得到
+\begin{equation}
+    \vec{n}\times
+    \oiint_{S_0} \left[
+        \frac{\partial^2}{\partial t^2}    
+        \frac{\vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t-\frac{R}{c_0}\right)}{4\pi c_0R}
+        -c_0\nabla 
+        \frac{\nabla' \cdot
+        \vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t-\frac{R}{c_0}\right)}{4\pi R}
+    \right]\text{d}S'
+    =\vec{n}\times
+    \frac{\partial \mathscr{E}^{\text{inc}}(\vec{r},t)}{\partial t}
+\end{equation}
+\par 类似地，时域磁场积分方程表示为
+\begin{equation}
+    \frac{1}{2}
+    \frac{\partial \vec{\bar{\mathscr{J}}}_s^{\text{inc}}(\vec{r},t)}{\partial t}
+    -\vec{n}\times
+    \oiint_{S_0} \nabla \times
+    \frac{\partial}{\partial t}
+    \frac{\vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t-\frac{R}{c_0}\right)}{4\pi c_0R}
+    \text{d}S'
+    =\vec{n}\times
+    \vec{\bar{\mathscr{H}}}_s^{\text{inc}}(\vec{r},t)
+\end{equation}
+
+\subsection{时间步进求解}
+
+\par 为了求解时域积分方程，要将未知函数在空间域和时域上展开。
+首先进行空间展开，则 $\vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t\right)$ 可表示为
+\begin{equation}
+    \vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t\right)
+    \approx\sum_{n=1}^{N_s} \mathscr{J}_n(t) \vec{\Lambda}_n(\vec{r}')
+\end{equation}
+\par 其中，$N_s$ 为三角形网格中的公共边数目。
+然后，我们还需要对其进行时域上的展开
+\begin{equation}
+    \mathscr{J}_n(t)
+    \approx\sum_{l=1}^{N_t} 
+    I_n^{(l)}(t)T_l(t)
+\end{equation}
+\par 其中，$N_t$ 为时间步的总数目，
+$T_l(t)=T(t-l\Delta t)$ 为时域基函数。
+\par 由此可以得到未知函数的完整离散形式为
+\begin{equation}
+    \vec{\bar{\mathscr{J}}}_s\left(\vec{r}',t\right)
+    \approx\sum_{n=1}^{N_s} 
+    \sum_{l=1}^{N_t} 
+    I_n^{(l)} \vec{\Lambda}_n(\vec{r}')T_l(t)
+\end{equation}
+
+\begin{theorem}{时间步进公式}
+    空间域测试函数选择 $\Lambda_m(\vec{r})$，
+    时域测试函数选择 $\delta(t-k\Delta t)$，得到
+    \begin{equation}
+        [Z^{(0)}]\{I\}^{(k)}
+        =\{V\}^{(k)}-\sum_{l=1}^{k-1}[Z^{(k-l)}]\{I\}^{(l)}
+        \qquad 
+        k=1,2,\cdots
+    \end{equation}
+    其中，$\{I\}^{(k)}
+    =[I_1^{(k)},I_2^{(k)},\cdots,I_{N_s}^{(k)}]^T$，
+    此外
+    \begin{align}
+        Z_{mn}^{(k-l)}
+        &=\oiint_{S_0}
+        \vec{\Lambda}_m(\vec{r})\cdot
+        \oiint_{S_0}
+        \left[
+            \frac{\vec{\Lambda}_n(\vec{r}')}{4\pi c_0 R}
+            \ddot{T}^{(k-l)}-c_0\nabla 
+            \frac{\nabla' \cdot \vec{\Lambda}_n(\vec{r}')}{4\pi R}T^{(k-l)}
+        \right]\text{d}S'\text{d}S\\
+        V_m^{(k)}
+        &=\oiint_{S_0}
+        \vec{\Lambda}_m(\vec{r})\cdot
+        \vec{\dot{\mathscr{E}}}^{\text{inc}}(\vec{r},k\Delta t)\text{d}S
+    \end{align}
+    其中，$T^{(k-l)}=
+    T\left((k-l)\Delta t - \frac{R}{c_0}\right)$，
+    $\ddot{T}=\frac{\partial^2 T(t)}{\partial t^2}$，
+    $\vec{\dot{\mathscr{E}}}^{\text{inc}}
+    =\frac{\partial \vec{\mathscr{E}}^{\text{inc}}(\vec{r},t)}{\partial t}$。
+\end{theorem}
