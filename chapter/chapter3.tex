@@ -2,9 +2,6 @@
 
 \section{有限元法概述}
 
-\par 首先简单地介绍加权残差法，然后求解一个简单的一维 Helmholtz 方程，以此来阐明
-有限元法的基本原理。
-
 \subsection{一般原理}
 
 \par 使用加权残差法或变分法均可以建立有限元法的公式。在本章中，我们使用加权残
@@ -54,29 +51,32 @@ $\varphi$ 为待求未知解，$f$ 为源函数。为了求得 $\varphi$ 的解�
     \end{align}
 \end{theorem}
 
-\par 在构建公式的过程中，最关键的一步是找到一组可以用来展开未知解的基函数。对于复杂
+\par 在构建公式的过程中，需要找到一组可以用来展开未知解的基函数。
+对于复杂
 的具有不规则形状的二维和三维问题，这是极其困难甚至不可能的。
-有限元法的基本思想是将
-求解区域划分为小的子域，称为有限单元，然后使用简单的函数，如线性函数或二次
+\par 有限元法的基本思想是将
+求解区域划分为小的子域，然后使用简单的函数，如线性函数或二次
 函数来近似每个单元内的未知解。
 
 \subsection{一维算例}
 
-\par 考虑一个 Helmholtz 方程的一维边值问题：
-\begin{equation}
-    \frac{\text{d}^2\varphi}{\text{d}x^2} + k^2\varphi = f
-    \qquad 0<x<L
-    \label{一维Helmholtz}
-\end{equation}
-\par 其边界条件为
-\begin{align}
-    \label{一维边界条件-1}
-    \left.\varphi\right|_{x=0} &= p \\
-    \label{一维边界条件-2}
-    \left.\left(
-        \frac{\text{d}\varphi}{\text{d}x} + \gamma\varphi
-    \right)\right|_{x=L} &= q
-\end{align}
+\begin{definition}{一维边值问题}
+    考虑一个 Helmholtz 方程的一维边值问题：
+    \begin{equation}
+        \frac{\text{d}^2\varphi}{\text{d}x^2} + k^2\varphi = f
+        \qquad 0<x<L
+        \label{一维Helmholtz}
+    \end{equation}
+    其边界条件为
+    \begin{align}
+        \label{一维边界条件-1}
+        \left.\varphi\right|_{x=0} &= p \\
+        \label{一维边界条件-2}
+        \left.\left(
+            \frac{\text{d}\varphi}{\text{d}x} + \gamma\varphi
+        \right)\right|_{x=L} &= q
+    \end{align}
+\end{definition}
 
 \begin{figure}[!htbp]
     \centering
@@ -85,9 +85,8 @@ $\varphi$ 为待求未知解，$f$ 为源函数。为了求得 $\varphi$ 的解�
     \label{一维网格和一维线性基函数}
 \end{figure}
 
-\par 有限元法的第一步是将求解区域 $(0,L)$ 划分成多个单元。
-我们让单元
-足够小，使得每个单元上的未知解可以通过对此单元两端节点上的值进行线性插值得到。
+\par 有限元法的第一步是将求解区域 $(0,L)$ 划分成
+多个足够小的单元。
 于是，未知解可表示为
 \begin{equation}
     \varphi(x) = \sum_{j=0}^{N} \varphi_j N_j(x)
@@ -180,7 +179,7 @@ $N_j(x)$ 是一个三角形函数，仅在第 $j$ 个单元与第 $j+1$ 个单
     和 $K_{i,i+1}$ 是非零的。
 \end{note}
 
-\begin{theorem}
+\begin{theorem}{矩阵元素的解析式}
     定理 \ref{thm:一维算例 Galerkin 法} 中的 $K_{ij}$
     可以直接计算得到解析式
     \begin{align}
@@ -215,7 +214,8 @@ $N_j(x)$ 是一个三角形函数，仅在第 $j$ 个单元与第 $j+1$ 个单
 \end{theorem}
 
 \par 与有限差分法类似，用有限元法模拟波的传播时，由于数值离散化，模拟波的波数将与
-精确值略有不同。假设有一个均匀离散网格使得 $l^{(i)}=h$，考虑沿 $x$ 方向传播的平面波
+精确值略有不同。
+\par 假设有一个均匀离散网格使得 $l^{(i)}=h$，考虑沿 $x$ 方向传播的平面波
 \begin{equation}
     \varphi(x) = \varphi_0e^{-jkx}
 \end{equation}
@@ -290,8 +290,6 @@ $N_j(x)$ 是一个三角形函数，仅在第 $j$ 个单元与第 $j+1$ 个单
 
 \section{标量场的有限元分析}
 
-\par 本节介绍二维或三维标量问题的有限元分析。
-
 \subsection{边值问题}
 
 \par 考虑求解区域 $\Omega$ 中由密度为 $\varrho_e$ 的电荷
@@ -311,7 +309,7 @@ $N_j(x)$ 是一个三角形函数，仅在第 $j$ 个单元与第 $j+1$ 个单
     \vec{E}=-\nabla\varphi
     \label{电场与电势关系}
 \end{equation}
-\par 将式 (\ref{电场与电势关系}) 代入式 (\ref{Maxwell 方程-2}) 中，得到泊松方程
+\par 将式 (\ref{电场与电势关系}) 代入式 (\ref{Maxwell 方程-2}) 中，得到 Poisson 方程
 \begin{equation}
     -\nabla\cdot(\epsilon\nabla\varphi)=\varrho_e
     \qquad \text{在}\ \Omega\ \text{中}
@@ -334,12 +332,9 @@ $\Gamma_D$ 上的电势的指定值，$\kappa_N$
 
 \par 常用的子域有二维中的三
 角形单元和三维中的四面体单元。
-当区域 $\Omega$ 被划分成小单元后，每个单元中的电势可以用诸
-如线性、二次和三次函数的简单函数近似。
-这种近似可以通过
-对单元内一组离散点处的电势值进行插值得到。
+类似一维情况，我们首先需要推导子域上的基函数。
 
-\begin{theorem}
+\begin{theorem}{三角形单元中的电势}
     三角形单元中的电势可以近似为
     \begin{equation}
         \varphi^e(x,y)=N_1^e(x,y)\varphi_1^e
@@ -394,7 +389,7 @@ $\Gamma_D$ 上的电势的指定值，$\kappa_N$
     解得 $a$、$b$ 和 $c$ 的值，代入整理得证。
 \end{solution}
 
-\begin{theorem}
+\begin{theorem}{插值函数的性质}
     推导的插值函数具有以下特性
     \begin{equation}
         N_l^e(x^e_k,y^e_k)
@@ -927,6 +922,10 @@ $E_j^D$ 和 $\vec{N}_j^D$ 为这些棱边上的切向电场和相应的基函数
     该公式具有二阶精度，当 $\beta\geq\frac{1}{4}$ 时无条件稳定。
 \end{theorem}
 
+\subsection{递归卷积法}
+
+\par 对于色散媒质，我们需要对上一节的公式进行修正。
+
 \section{时域间断 Galerkin 法}
 
 \subsection{时域间断 Galerkin 法的基本思想}
@@ -936,25 +935,6 @@ $E_j^D$ 和 $\vec{N}_j^D$ 为这些棱边上的切向电场和相应的基函数
     \frac{1}{c}\frac{\partial \varphi(x,t)}{\partial t}
     -\frac{\partial \varphi(x,t)}{\partial x}=0
     \label{一维时域波动方程}
-\end{equation}
-\par 首先将该区域 $(0,L)$ 分成小的单元。
-然后将式 (\ref{一维时域波动方程}) 乘以一个测试函数 $w^e$，
-并且在单元 $e$ 上积分，得到
-\begin{equation}
-    \int_{x_1^e}^{x_2^e}w^e\left[
-        \frac{1}{c}\frac{\partial \varphi}{\partial t}
-        -\frac{\partial \varphi}{\partial x}
-    \right]\text{d}x=0
-\end{equation}
-\par 其中，$x_1^e$ 与 $x_2^e$ 表示单元 $e$ 的两个端点。
-使用分部积分法，可以得到弱式表达式
-\begin{equation}
-    \int_{x_1^e}^{x_2^e}\left[
-        w^e\frac{1}{c}\frac{\partial \varphi}{\partial t}
-        +\varphi\frac{\partial w^e}{\partial x}
-    \right]\text{d}x
-    =\Big.(\varphi w^e)\Big|_{x_1^e}^{x_2^e}
-    \label{一维时域波动方程弱式}
 \end{equation}
 
 \begin{definition}{数值通量}
@@ -978,31 +958,70 @@ $E_j^D$ 和 $\vec{N}_j^D$ 为这些棱边上的切向电场和相应的基函数
     当 $\alpha=1$ 时为中心通量；当 $\alpha=0$ 时为迎风通量。
 \end{definition}
 
-\par 用数值通量来代替
-式 (\ref{一维时域波动方程弱式}) 右边的 $\varphi$，得到
-\begin{equation}
-    \int_{x_1^e}^{x_2^e}\left[
-        w^e\frac{1}{c}\frac{\partial \varphi}{\partial t}
-        +\varphi\frac{\partial w^e}{\partial x}
-    \right]\text{d}x
-    =\Big.(\text{f} w^e)\Big|_{x_1^e}^{x_2^e}
-\end{equation}
-\par 从弱式表达式出发，再应用一次分部积分，可以反推得到强式表达式
-\begin{equation}
-    \int_{x_1^e}^{x_2^e}w^e\left[
-        \frac{1}{c}\frac{\partial \varphi}{\partial t}
-        -\frac{\partial \varphi}{\partial x}
-    \right]\text{d}x
-    =\Big.\big[(\text{f}-\varphi) w^e\big]\Big|_{x_1^e}^{x_2^e}
-\end{equation}
+\begin{theorem}{强式表达式}
+    式 (\ref{一维时域波动方程}) 的强式表达式为
+    \begin{equation}
+        \int_{x_1^e}^{x_2^e}w^e\left[
+            \frac{1}{c}\frac{\partial \varphi}{\partial t}
+            -\frac{\partial \varphi}{\partial x}
+        \right]\text{d}x
+        =\Big.\big[(\text{f}-\varphi) w^e\big]\Big|_{x_1^e}^{x_2^e}
+    \end{equation}
+\end{theorem}
+
+\begin{exercise}
+    证明上述定理。
+\end{exercise}
+
+\begin{solution}
+    首先将该区域 $(0,L)$ 分成小的单元。
+    然后将式 (\ref{一维时域波动方程}) 乘以一个测试函数 $w^e$，
+    并且在单元 $e$ 上积分，得到
+    \begin{equation*}
+        \int_{x_1^e}^{x_2^e}w^e\left[
+            \frac{1}{c}\frac{\partial \varphi}{\partial t}
+            -\frac{\partial \varphi}{\partial x}
+        \right]\text{d}x=0
+    \end{equation*}
+    其中，$x_1^e$ 与 $x_2^e$ 表示单元 $e$ 的两个端点。
+    使用分部积分法，可以得到弱式表达式
+    \begin{equation*}
+        \int_{x_1^e}^{x_2^e}\left[
+            w^e\frac{1}{c}\frac{\partial \varphi}{\partial t}
+            +\varphi\frac{\partial w^e}{\partial x}
+        \right]\text{d}x
+        =\Big.(\varphi w^e)\Big|_{x_1^e}^{x_2^e}
+        \label{一维时域波动方程弱式}
+    \end{equation*}
+    用数值通量来代替
+    上式右边的 $\varphi$，得到
+    \begin{equation*}
+        \int_{x_1^e}^{x_2^e}\left[
+            w^e\frac{1}{c}\frac{\partial \varphi}{\partial t}
+            +\varphi\frac{\partial w^e}{\partial x}
+        \right]\text{d}x
+        =\Big.(\text{f} w^e)\Big|_{x_1^e}^{x_2^e}
+    \end{equation*}
+    再应用一次分部积分，可以反推得到强式表达式
+    \begin{equation*}
+        \int_{x_1^e}^{x_2^e}w^e\left[
+            \frac{1}{c}\frac{\partial \varphi}{\partial t}
+            -\frac{\partial \varphi}{\partial x}
+        \right]\text{d}x
+        =\Big.\big[(\text{f}-\varphi) w^e\big]\Big|_{x_1^e}^{x_2^e}
+    \end{equation*}
+\end{solution}
+
 \par 下面使用基函数 $N_j^e$ 把单元 $e$ 中的 $\varphi$ 展开为
 \begin{equation}
     \varphi^e(x,t)=\sum_{j=1}^{N}N_j^e(x)\varphi_j(t)
 \end{equation}
 \par 其中，$p$ 为基函数的阶数。
 
-\begin{theorem}
-    对于该问题，我们可以得到如下方程组
+\begin{theorem}{微分方程组}
+    对于该问题，
+    使用统一形式的数值通量，
+    我们可以得到如下方程组
     \begin{equation}
         [T^e]\frac{\text{d}\{\varphi^e\}}{\text{d}t}
         -[S^e]\{\varphi^e\}
@@ -1026,79 +1045,108 @@ $E_j^D$ 和 $\vec{N}_j^D$ 为这些棱边上的切向电场和相应的基函数
 \subsection{中心通量时域间断 Galerkin 法}
 
 \par 为了清晰起见，我们在建立公式时暂时忽略传导损耗项和源项。
-首先使用矢量函数 $\vec{W}_i$ 测试式 (\ref{Maxwell 时域方程组-1}) 
-和式 (\ref{Maxwell 时域方程组-2}) 给出的 Maxwell 方程，
-并在一个单元内积分，得到
-\begin{align}
-    \int_{\Omega^e}\vec{W}_i\cdot\left(
-        \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
-        -\nabla\times\vec{\mathscr{H}}
-    \right)\text{d}\Omega&=0\\
-    \int_{\Omega^e}\vec{W}_i\cdot\left(
-        \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
-        +\nabla\times\vec{\mathscr{E}}
-    \right)\text{d}\Omega&=0
-\end{align}
-\par 其中，$\Omega^e$ 表示第 $e$ 个单元的区域。
-应用矢量恒等式
-$\vec{W}_i\cdot(\nabla\times \vec{A})
-=\nabla\cdot(\vec{A}\times\vec{W}_i)+\vec{A}\cdot(\nabla\times\vec{W}_i)$
-和 Gauss 定理，得到弱式表达式
-\begin{align}
-    \int_{\Omega^e}\left[
-        \epsilon\vec{W}_i\cdot\frac{\partial\vec{\mathscr{E}}}{\partial t}
-        -(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{H}}
-    \right]\text{d}\Omega
-    &=\oint_{\Gamma^e}\vec{W}_i\cdot(\vec{n}\times\vec{\mathscr{H}})\text{d}\Gamma\\
-    \int_{\Omega^e}\left[
-        \mu\vec{W}_i\cdot\frac{\partial\vec{\mathscr{H}}}{\partial t}
-        +(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{E}}
-    \right]\text{d}\Omega
-    &=-\oint_{\Gamma^e}\vec{W}_i\cdot(\vec{n}\times\vec{\mathscr{E}})\text{d}\Gamma
-\end{align}
-\par 其中，$\Gamma^e$ 表示包围 $\Omega^e$ 的边界。
-为了将单元内部场与外部场 $(\mathscr{E}^+, \mathscr{H}^+)$ 耦合，将
-$\vec{n}\times\mathscr{H}$ 用一个数值通量 $\mathscr{F}_{\text{h}}$ 替换，
-将 $\vec{n}\times\mathscr{E}$ 用另一个数值通量 $\mathscr{F}_{\text{e}}$ 替换，
-得到
-\begin{align}
-    \int_{\Omega^e}\left[
-        \epsilon\vec{W}_i\cdot\frac{\partial\vec{\mathscr{E}}}{\partial t}
-        -(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{H}}
-    \right]\text{d}\Omega
-    &=\oint_{\Gamma^e}\vec{W}_i\cdot\mathscr{F}_{\text{h}}\text{d}\Gamma\\
-    \int_{\Omega^e}\left[
-        \mu\vec{W}_i\cdot\frac{\partial\vec{\mathscr{H}}}{\partial t}
-        +(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{E}}
-    \right]\text{d}\Omega
-    &=-\oint_{\Gamma^e}\vec{W}_i\cdot\mathscr{F}_{\text{e}}\text{d}\Gamma
-\end{align}
-\par 从弱式表达式出发，逆向应用矢量恒等式和 Gauss 定理，可以反推得到强式表达式
-\begin{align}
-    \label{时域间断 Galerkin 法强式表达式-1}
-    \int_{\Omega^e}\vec{W}_i\cdot\left(
-        \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
-        -\nabla\times\vec{\mathscr{H}}
-    \right)\text{d}\Omega
-    &=\oint_{\Gamma^e}\vec{W}_i\cdot
-    (\mathscr{F}_{\text{h}}-\vec{n}\times\vec{\mathscr{H}})\text{d}\Gamma\\
-    \label{时域间断 Galerkin 法强式表达式-2}
-    \int_{\Omega^e}\vec{W}_i\cdot\left(
-        \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
-        +\nabla\times\vec{\mathscr{E}}
-    \right)\text{d}\Omega
-    &=-\oint_{\Gamma^e}\vec{W}_i\cdot
-    (\mathscr{F}_{\text{e}}-\vec{n}\times\vec{\mathscr{E}})\text{d}\Gamma
-\end{align}
-\par 使用中心通量
-\begin{equation}
-    \mathscr{F}_{\text{e}}=\frac{1}{2}
-    \Big[\vec{n}\times(\mathscr{E}+\vec{\mathscr{E}}^+)\Big]
-    \qquad
-    \mathscr{F}_{\text{h}}=\frac{1}{2}
-    \Big[\vec{n}\times(\mathscr{H}+\vec{\mathscr{H}}^+)\Big]
-\end{equation}
-\par 式 (\ref{时域间断 Galerkin 法强式表达式-1}) 和式 (\ref{时域间断 Galerkin 法强式表达式-2})
+
+\begin{theorem}{强式表达式}
+    式 (\ref{Maxwell 时域方程组-1}) 
+    和式 (\ref{Maxwell 时域方程组-2}) 给出的 Maxwell 方程的强式表达式为
+    \begin{align}
+        \label{时域间断 Galerkin 法强式表达式-1}
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
+            -\nabla\times\vec{\mathscr{H}}
+        \right)\text{d}\Omega
+        &=\oint_{\Gamma^e}\vec{W}_i\cdot
+        (\vec{\mathscr{F}}_{\text{h}}-\vec{n}\times\vec{\mathscr{H}})\text{d}\Gamma\\
+        \label{时域间断 Galerkin 法强式表达式-2}
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
+            +\nabla\times\vec{\mathscr{E}}
+        \right)\text{d}\Omega
+        &=-\oint_{\Gamma^e}\vec{W}_i\cdot
+        (\vec{\mathscr{F}}_{\text{e}}-\vec{n}\times\vec{\mathscr{E}})\text{d}\Gamma
+    \end{align}
+    其中，$\Omega^e$ 表示第 $e$ 个单元的区域，
+    $\Gamma^e$ 表示包围 $\Omega^e$ 的边界。
+\end{theorem}
+
+\begin{exercise}
+    证明上述定理。
+\end{exercise}
+
+\begin{solution}
+    首先使用矢量函数 $\vec{W}_i$ 测试式 (\ref{Maxwell 时域方程组-1}) 
+    和式 (\ref{Maxwell 时域方程组-2}) 给出的 Maxwell 方程，
+    并在一个单元内积分，得到
+    \begin{align*}
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
+            -\nabla\times\vec{\mathscr{H}}
+        \right)\text{d}\Omega&=0\\
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
+            +\nabla\times\vec{\mathscr{E}}
+        \right)\text{d}\Omega&=0
+    \end{align*}
+    应用矢量恒等式
+    $\vec{W}_i\cdot(\nabla\times \vec{A})
+    =\nabla\cdot(\vec{A}\times\vec{W}_i)+\vec{A}\cdot(\nabla\times\vec{W}_i)$
+    和 Gauss 定理，得到弱式表达式
+    \begin{align*}
+        \int_{\Omega^e}\left[
+            \epsilon\vec{W}_i\cdot\frac{\partial\vec{\mathscr{E}}}{\partial t}
+            -(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{H}}
+        \right]\text{d}\Omega
+        &=\oint_{\Gamma^e}\vec{W}_i\cdot(\vec{n}\times\vec{\mathscr{H}})\text{d}\Gamma\\
+        \int_{\Omega^e}\left[
+            \mu\vec{W}_i\cdot\frac{\partial\vec{\mathscr{H}}}{\partial t}
+            +(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{E}}
+        \right]\text{d}\Omega
+        &=-\oint_{\Gamma^e}\vec{W}_i\cdot(\vec{n}\times\vec{\mathscr{E}})\text{d}\Gamma
+    \end{align*}
+    为了将单元内部场与外部场 $(\mathscr{E}^+, \mathscr{H}^+)$ 耦合，将
+    $\vec{n}\times\vec{\mathscr{H}}$ 用一个数值通量 $\vec{\mathscr{F}}_{\text{h}}$ 替换，
+    将 $\vec{n}\times\vec{\mathscr{E}}$ 用另一个数值通量 $\vec{\mathscr{F}}_{\text{e}}$ 替换，
+    得到
+    \begin{align*}
+        \int_{\Omega^e}\left[
+            \epsilon\vec{W}_i\cdot\frac{\partial\vec{\mathscr{E}}}{\partial t}
+            -(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{H}}
+        \right]\text{d}\Omega
+        &=\oint_{\Gamma^e}\vec{W}_i\cdot\vec{\mathscr{F}}_{\text{h}}\text{d}\Gamma\\
+        \int_{\Omega^e}\left[
+            \mu\vec{W}_i\cdot\frac{\partial\vec{\mathscr{H}}}{\partial t}
+            +(\nabla\times\vec{W}_i)\cdot\vec{\mathscr{E}}
+        \right]\text{d}\Omega
+        &=-\oint_{\Gamma^e}\vec{W}_i\cdot\vec{\mathscr{F}}_{\text{e}}\text{d}\Gamma
+    \end{align*}
+    从弱式表达式出发，逆向应用矢量恒等式和 Gauss 定理，可以反推得到强式表达式
+    \begin{align*}
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
+            -\nabla\times\vec{\mathscr{H}}
+        \right)\text{d}\Omega
+        &=\oint_{\Gamma^e}\vec{W}_i\cdot
+        (\vec{\mathscr{F}}_{\text{h}}-\vec{n}\times\vec{\mathscr{H}})\text{d}\Gamma\\
+        \int_{\Omega^e}\vec{W}_i\cdot\left(
+            \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
+            +\nabla\times\vec{\mathscr{E}}
+        \right)\text{d}\Omega
+        &=-\oint_{\Gamma^e}\vec{W}_i\cdot
+        (\vec{\mathscr{F}}_{\text{e}}-\vec{n}\times\vec{\mathscr{E}})\text{d}\Gamma
+    \end{align*}
+\end{solution}
+
+\begin{theorem}{中心通量}
+    数值通量的一种选择是中心通量，即单元分界面两边场的平均值。
+    \begin{align}
+        \vec{\mathscr{F}}_{\text{e}}&=\frac{1}{2}
+        \Big[\vec{n}\times(\vec{\mathscr{E}}+\vec{\mathscr{E}}^+)\Big]\\
+        \vec{\mathscr{F}}_{\text{h}}&=\frac{1}{2}
+        \Big[\vec{n}\times(\vec{\mathscr{H}}+\vec{\mathscr{H}}^+)\Big]
+    \end{align}
+\end{theorem}
+
+\par 将中心通量代入，式 (\ref{时域间断 Galerkin 法强式表达式-1}) 和式 (\ref{时域间断 Galerkin 法强式表达式-2})
 可以写成
 \begin{align}
     \label{中心通量时域间断 Galerkin 法-1}
@@ -1107,7 +1155,7 @@ $\vec{n}\times\mathscr{H}$ 用一个数值通量 $\mathscr{F}_{\text{h}}$ 替换
         -\nabla\times\vec{\mathscr{H}}
     \right)\text{d}\Omega
     &=\frac{1}{2}\oint_{\Gamma^e}\vec{W}_i\cdot
-    \Big[\vec{n}\times(\mathscr{H}^+-\vec{\mathscr{H}})\Big]
+    \Big[\vec{n}\times(\vec{\mathscr{H}}^+-\vec{\mathscr{H}})\Big]
     \text{d}\Gamma\\
     \label{中心通量时域间断 Galerkin 法-2}
     \int_{\Omega^e}\vec{W}_i\cdot\left(
@@ -1115,30 +1163,34 @@ $\vec{n}\times\mathscr{H}$ 用一个数值通量 $\mathscr{F}_{\text{h}}$ 替换
         +\nabla\times\vec{\mathscr{E}}
     \right)\text{d}\Omega
     &=-\frac{1}{2}\oint_{\Gamma^e}\vec{W}_i\cdot
-    \Big[\vec{n}\times(\mathscr{E}^+-\vec{\mathscr{E}})\Big]
+    \Big[\vec{n}\times(\vec{\mathscr{E}}^+-\vec{\mathscr{E}})\Big]
     \text{d}\Gamma
 \end{align}
-\par 导电边界上的边界条件可以通过
-两种方式实现：一种是直接规定边界上的未知数为零；
-另一种是将场设置为以下形式
-\begin{equation}
-    \vec{n}\times\vec{\mathscr{E}}^+=
-    -\vec{n}\times\vec{\mathscr{E}}
-    \qquad
-    \vec{n}\times\vec{\mathscr{H}}^+=
-    -\vec{n}\times\vec{\mathscr{H}}
-\end{equation}
-\par 而混合边界条件，包括阻抗边界条件和一阶吸收边界条件，可以通过下面的设置来满足
-\begin{equation}
-    \vec{n}\times\vec{\mathscr{E}}^+=
-    -Z_s\vec{n}\times
-    (\vec{n}\times\vec{\mathscr{H}})
-    \qquad
-    \vec{n}\times\vec{\mathscr{H}}^+=
-    Y_s\vec{n}\times
-    (\vec{n}\times\vec{\mathscr{E}})
-\end{equation}
-\par 在这种情况下，式 (\ref{中心通量时域间断 Galerkin 法-1}) 和式 (\ref{中心通量时域间断 Galerkin 法-2})
+
+\begin{definition}{边界条件}
+    导电边界上的边界条件可以通过
+    两种方式实现：一种是直接规定边界上的未知数为零；
+    另一种是将场设置为以下形式
+    \begin{equation}
+        \vec{n}\times\vec{\mathscr{E}}^+=
+        -\vec{n}\times\vec{\mathscr{E}}
+        \qquad
+        \vec{n}\times\vec{\mathscr{H}}^+=
+        -\vec{n}\times\vec{\mathscr{H}}
+    \end{equation}
+    而混合边界条件，包括阻抗边界条件和一阶吸收边界条件，可以通过下面的设置来满足
+    \begin{equation}
+        \vec{n}\times\vec{\mathscr{E}}^+=
+        -Z_s\vec{n}\times
+        (\vec{n}\times\vec{\mathscr{H}})
+        \qquad
+        \vec{n}\times\vec{\mathscr{H}}^+=
+        Y_s\vec{n}\times
+        (\vec{n}\times\vec{\mathscr{E}})
+    \end{equation}
+\end{definition}
+
+\par 将边界条件代入，式 (\ref{中心通量时域间断 Galerkin 法-1}) 和式 (\ref{中心通量时域间断 Galerkin 法-2})
 可以写成
 \begin{align}
     \int_{\Omega^e}\vec{W}_i\cdot\left(
@@ -1166,6 +1218,16 @@ $\vec{n}\times\mathscr{H}$ 用一个数值通量 $\mathscr{F}_{\text{h}}$ 替换
 \end{align}
 \par 其中，$\Gamma_M$ 表示阻抗边界，
 $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
+
+\begin{definition}{符号简记}
+    使用简化记号表示切向场分量的跳变
+    \begin{align}
+        [\![\vec{\mathscr{E}}]\!]
+        &=\vec{n}\times(\vec{\mathscr{E}}^+-\vec{\mathscr{E}})\\
+        [\![\vec{\mathscr{H}}]\!]
+        &=\vec{n}\times(\vec{\mathscr{H}}^+-\vec{\mathscr{H}})
+    \end{align}
+\end{definition}
 
 \begin{theorem}{Galerkin 法}{中心通量时域间断 Galerkin 法方程}
     对于该问题，我们可以得到如下方程组
@@ -1195,11 +1257,11 @@ $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
         \Big]
         \text{d}\Omega\\
         R^e_{\text{e}}(i,j)&=
-        \int_{\Omega^e}\sigma_{\text{e}}\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Gamma
+        \int_{\Omega^e}\sigma_{\text{e}}\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Omega
         +\frac{1}{2}\int_{\Gamma^e\cap\Gamma_M}
         Y_s(\vec{n}\times\vec{N}_i^e)\cdot(\vec{n}\times\vec{N}_j^e)\text{d}\Gamma\\
         R^e_{\text{h}}(i,j)&=
-        \int_{\Omega^e}\sigma_{\text{m}}\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Gamma
+        \int_{\Omega^e}\sigma_{\text{m}}\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Omega
         +\frac{1}{2}\int_{\Gamma^e\cap\Gamma_M}
         Z_s(\vec{n}\times\vec{N}_i^e)\cdot(\vec{n}\times\vec{N}_j^e)\text{d}\Gamma\\
         \mathscr{f}^e_\text{e}(i)&=
@@ -1264,14 +1326,143 @@ $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
 
 \subsection{迎风通量时域间断 Galerkin 法}
 
+\begin{theorem}{迎风通量}
+    通过对两个单元的分界面求解一维 Riemann 问题，
+    可以得到数值通量
+    \begin{align}
+        \vec{\mathscr{F}}_{\text{e}}&=
+        \vec{n}\times\frac{Y^+\vec{\mathscr{E}}^+ +\vec{n}\times\vec{\mathscr{H}}^+}
+        {Y^+ + Y}\\
+        \vec{\mathscr{F}}_{\text{h}}&=
+        \vec{n}\times\frac{Z^+\vec{\mathscr{H}}^+ -\vec{n}\times\vec{\mathscr{E}}^+}
+        {Z^+ + Z}
+    \end{align}
+    其中，$Z$ 和 $Z^+$ 表示两个单元的特性阻抗，
+    $Y$ 和 $Y^+$ 表示两个单元的特性导纳。
+\end{theorem}
+
+\par 将迎风通量分别代入式 (\ref{时域间断 Galerkin 法强式表达式-1}) 
+和式 (\ref{时域间断 Galerkin 法强式表达式-2})，得到
+\begin{align}
+    \int_{\Omega^e}\vec{W}_i\cdot\left(
+        \epsilon\frac{\partial\vec{\mathscr{E}}}{\partial t}
+        -\nabla\times\vec{\mathscr{H}}
+    \right)\text{d}\Omega
+    &=\oint_{\Gamma^e}
+    \bar{Z}^{-1}\vec{W}_i\cdot\left(
+        Z^+[\![\vec{\mathscr{H}}]\!]
+        -\vec{n}\times[\![\vec{\mathscr{E}}]\!]
+    \right)
+    \text{d}\Gamma\\
+    \int_{\Omega^e}\vec{W}_i\cdot\left(
+        \mu\frac{\partial\vec{\mathscr{H}}}{\partial t}
+        +\nabla\times\vec{\mathscr{E}}
+    \right)\text{d}\Omega
+    &=-\oint_{\Gamma^e}
+    \bar{Y}^{-1}\vec{W}_i\cdot\left(
+        Y^+[\![\vec{\mathscr{E}}]\!]
+        +\vec{n}\times[\![\vec{\mathscr{H}}]\!]
+    \right)
+    \text{d}\Gamma
+\end{align}
+\par 其中，$\bar{Z}=Z+Z^+$，
+$\bar{Y}=Y+Y^+$。
+
+\begin{definition}{边界条件}
+    对于理想导体边界，可以直接
+    将边界上的离散电场值设置为零，也可以通过
+    设置 $Z^+=0$，$Y^+=\infty$ 和 $\vec{\mathscr{E}}^+=0$，
+    间接地满足边界条件。
+
+    对于混合边界条件，有
+    \begin{align}
+        \vec{n}\times\vec{\mathscr{H}}^+
+        -Y^+\vec{n}\times
+        (\vec{n}\times\vec{\mathscr{E}}^+)&=0\\
+        \vec{n}\times\vec{\mathscr{E}}^+
+        +Z^+\vec{n}\times
+        (\vec{n}\times\vec{\mathscr{H}}^+)&=0
+    \end{align}
+    也可以简单地设置
+    $\vec{\mathscr{E}}^+=0$，
+    $\vec{\mathscr{H}}^+=0$，
+    $Z^+=Z_s$ 和 $Y^+=\frac{1}{Z_s}$，
+    其中 $Z_s$ 表示给定的边界阻抗。
+\end{definition}
+
+\begin{theorem}{Galerkin 法}{迎风通量时域间断 Galerkin 法方程}
+    对于该问题，我们可以得到如下方程组
+    \begin{align}
+        [T^e_{\text{e}}]\frac{\text{d}\{\mathscr{E}^e\}}{\text{d}t}
+        -[S^e]\{\mathscr{H}^e\}
+        &=\{\mathscr{f}^e_\text{e}\}
+        -[F^e_{\text{ee}}]\{\mathscr{E}^e\}
+        -[F^e_{\text{eh}}]\{\mathscr{H}^e\}\\
+        [T^e_{\text{h}}]\frac{\text{d}\{\mathscr{H}^e\}}{\text{d}t}
+        +[S^e]\{\mathscr{E}^e\}
+        &=\{\mathscr{f}^e_\text{h}\}
+        -[F^e_{\text{he}}]\{\mathscr{E}^e\}
+        -[F^e_{\text{hh}}]\{\mathscr{H}^e\}
+    \end{align}
+    其中
+    \begin{align}
+        T^e_{\text{e}}(i,j)&=
+        \int_{\Omega^e}\epsilon\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Omega\\
+        T^e_{\text{h}}(i,j)&=
+        \int_{\Omega^e}\mu\vec{N}_i^e\cdot\vec{N}_j^e\text{d}\Omega\\
+        S^e(i,j)&=
+        \int_{\Omega^e}
+            \vec{N}_i^e\cdot(\nabla\times\vec{N}_j^e)
+        \text{d}\Omega\\
+        F^e_{\text{ee}}(i,j)&=
+        \int_{\Gamma^e}
+            \bar{Z}^{-1}
+            (\vec{n}\times\vec{N}_i^e)\cdot(\vec{n}\times\vec{N}_j^e)
+        \text{d}\Gamma\\
+        F^e_{\text{eh}}(i,j)&=
+        \int_{\Gamma^e}
+            \bar{Z}^{-1}Z^+
+            \vec{N}_i^e\cdot(\vec{n}\times\vec{N}_j^e)
+        \text{d}\Gamma\\
+        F^e_{\text{he}}(i,j)&=
+        \int_{\Gamma^e}
+            \bar{Y}^{-1}Y^+
+            (\vec{n}\times\vec{N}_i^e)\cdot \times\vec{N}_j^e
+        \text{d}\Gamma\\
+        F^e_{\text{hh}}(i,j)&=
+        \int_{\Gamma^e}
+            \bar{Y}^{-1}
+            (\vec{n}\times\vec{N}_i^e)\cdot(\vec{n}\times\vec{N}_j^e)
+        \text{d}\Gamma\\
+        \mathscr{f}^e_\text{e}(i)&=
+        \int_{\Gamma^e}
+            \bar{Z}^{-1}\left[
+                (\vec{n}\times\vec{N}_i^e)\cdot
+                (\vec{n}\times\vec{\mathscr{E}}^+)
+                +Z^+\vec{N}_i^e\cdot(\vec{n}\times\vec{\mathscr{H}}^+)
+            \right]
+        \text{d}\Gamma\\
+        \mathscr{f}^e_\text{h}(i)&=
+        \int_{\Gamma^e}
+            \bar{Y}^{-1}\left[
+                (\vec{n}\times\vec{N}_i^e)\cdot
+                (\vec{n}\times\vec{\mathscr{H}}^+)
+                -Y^+\vec{N}_i^e\cdot(\vec{n}\times\vec{\mathscr{E}}^+)
+            \right]
+        \text{d}\Gamma
+    \end{align}
+    其中，$\{\mathscr{f}^e_\text{e}\}$ 和 $\{\mathscr{f}^e_\text{h}\}$ 中
+    包含了紧邻单元外侧的离散场。
+\end{theorem}
+
 \section{吸收边界条件}
 
 \subsection{二维吸收边界条件}
 
-\par 在有限差分法中介绍过二维吸收边界条件。
-但是那些条件都是针对平面边界推导
+\par 在有限差分法中的二维吸收边界条件
+都是针对平面边界推导
 的，而在有限元法中可以使用曲面边界截断网格，
-因此需要使用能充分考虑曲率影响的吸收边
+因此需要考虑曲面边界的吸收边
 界条件。
 
 \begin{theorem}{一阶吸收边界条件}
@@ -1374,13 +1565,105 @@ $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
             \frac{1}{2jk\rho^2}
             +\frac{1}{2k^2\rho^3}
         \right)\frac{\partial^2 \varphi}{\partial \phi^2}
-        +\mathcal{O}\left(\frac{1}{\rho^{\frac{9}{2}}}\right)
+        +\mathcal{O}\left(\rho^{-\frac{9}{2}}\right)
     \end{equation*}
 \end{solution}
 
 \par 保留靠前的更多项，上面描述的渐进方法可用于推导更高阶的吸收边界条件。
+另外，还有一种更系统的方法用于推导吸收边界条件。
 
-\begin{theorem}
+\begin{definition}{微分算子}
+    定义一个微分算子为
+    \begin{equation}
+        \mathcal{B}_m=
+        \left(
+            \frac{\partial}{\partial \rho}
+            +jk+\frac{4m-3}{2\rho}
+        \right)\mathcal{B}_{m-1}
+    \end{equation}
+    其中，$\mathcal{B}_0=1$。
+\end{definition}
+
+\begin{theorem}{微分算子的性质}
+    算子 $\mathcal{B}_m$ 可消除式
+    渐近形式的波函数解的前 $m$ 项，得到
+    \begin{equation}
+        \mathcal{B}_m\varphi=
+        \mathcal{O}\left(
+            \rho^{-2m-\frac{1}{2}}
+        \right)
+        \label{微分算子的性质}
+    \end{equation}
+\end{theorem}
+
+\begin{exercise}
+    证明微分算子的性质。
+\end{exercise}
+
+\begin{solution}
+    首先考虑 $\mathcal{B}_1\varphi$，它可以写成
+    \begin{equation*}
+        \mathcal{B}_1\varphi=
+        \left(
+            \frac{\partial}{\partial \rho}
+            +jk+\frac{1}{2\rho}
+        \right)\varphi
+        =-\frac{e^{-jk\rho}}{\sqrt{\rho}}
+        \sum_{n=1}^{\infty}\frac{n a_n(\phi)}{\rho^{n+1}}
+        =\mathcal{O}\left(
+            \rho^{-\frac{5}{2}}
+        \right)
+    \end{equation*}
+    然后假设
+    \begin{equation*}
+        \mathcal{B}_{m-1}\varphi
+        =-\frac{e^{-jk\rho}}{\sqrt{\rho}}
+        \sum_{n=2(m-1)}^{\infty}\frac{b_n(\phi)}{\rho^{n}}
+        =\mathcal{O}\left(
+            \rho^{-2(m-1)-\frac{1}{2}}
+        \right)
+    \end{equation*}
+    考虑 $\mathcal{B}_{m}$
+    \begin{equation*}
+        \begin{aligned}
+            \mathcal{B}_{m}\varphi
+            &=
+            \left(
+                \frac{\partial}{\partial \rho}
+                +jk+\frac{4m-3}{2\rho}
+            \right)\mathcal{B}_{m-1}\varphi\\
+            &=\frac{2(m-1)}{\rho}\mathcal{B}_{m-1}\varphi
+            -\frac{e^{-jk\rho}}{\sqrt{\rho}}
+            \sum_{n=2(m-1)}^{\infty}
+            \frac{n b_n(\phi)}{\rho^{n+1}}\\
+            &=\frac{e^{-jk\rho}}{\sqrt{\rho}}
+            \left[
+                \frac{2(m-1)}{\rho}
+                \sum_{n=2(m-1)}^{\infty}
+                \frac{b_n(\phi)}{\rho^{n}}
+                -\sum_{n=2(m-1)}^{\infty}
+                \frac{n b_n(\phi)}{\rho^{n+1}}
+            \right]\\
+            &=\frac{e^{-jk\rho}}{\sqrt{\rho}}
+            \left[
+                \sum_{n=2(m-1)}^{\infty}
+                \frac{2(m-1)b_n(\phi)}{\rho^{n+1}}
+                -\sum_{n=2(m-1)}^{\infty}
+                \frac{n b_n(\phi)}{\rho^{n+1}}
+            \right]\\
+            &=\frac{e^{-jk\rho}}{\sqrt{\rho}}
+            \sum_{n=2m-1}^{\infty}
+            \frac{c_n(\varphi)}{\rho^{n+1}}
+            =\mathcal{O}\left(
+                \rho^{-2m-\frac{1}{2}}
+            \right)
+        \end{aligned}
+    \end{equation*}
+\end{solution}
+
+\par 用式 (\ref{微分算子的性质}) 可以方便地推导高阶吸收边界条件。
+
+\begin{theorem}{非圆形边界的吸收边界条件}
     对于非圆形的边界，吸收边界条件可以通过下面的替换获得
     \begin{equation}
         \frac{\partial}{\partial \rho}
@@ -1421,7 +1704,7 @@ $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
 
 \subsection{三维吸收边界条件}
 
-\begin{theorem}{一阶吸收边界条件}
+\begin{theorem}{一阶吸收边界条件}{一阶吸收边界条件}
     对于三维电磁问题，最简单的吸收边界条件是 Sommerfeld 辐射条件，
     表示为
     \begin{equation}
@@ -1430,6 +1713,204 @@ $\Gamma^e\cap\Gamma_M$ 表示 $\Gamma^e$ 中与阻抗边界相同的部分。
         -jk\vec{n}\times(\vec{n}\times\vec{E})
     \end{equation}
     其中，$\vec{n}$ 为吸收表面的单位法向矢量。
+\end{theorem}
+
+\par 类似二维情况，我们可以构建一个微分算子
+来推导高阶吸收边界条件。
+
+\begin{theorem}{矢量波函数解}
+    矢量波函数解的渐近展开式如下
+    \begin{equation}
+        \vec{E}(r,\theta,\phi)=
+        \frac{e^{-jkr}}{r}
+        \sum_{0}^{\infty}
+        \frac{\vec{A}_n(\theta,\phi)}{r^n}
+        \label{矢量波函数解}
+    \end{equation}
+    其中，$\vec{A}_n(\theta,\phi)$
+    仅为 $\theta$ 和 $\phi$ 的矢量函数，与 $r$ 无关。
+\end{theorem}
+
+\begin{definition}{微分算子}
+    定义一个微分算子为
+    \begin{equation}
+        \mathcal{L}_m \vec{u}
+        =\vec{r}\times\nabla \times\vec{u}
+        -\left(jk+\frac{m}{r}\right)\vec{u}
+        \qquad
+        m=0,1,2,\cdots
+    \end{equation}
+\end{definition}
+
+\begin{lemma}
+    \begin{equation}
+        \begin{aligned}
+            \mathcal{L}_m \left[
+                \frac{e^{-jkr}}{r}
+                \frac{\vec{A}_{n,\text{t}}(\theta, \phi)}{r^n}
+            \right]
+            &=
+            \left[
+                -\frac{1}{r}\left(
+                    1+\frac{\partial}{\partial r}
+                \right)
+                -\left(
+                    jk+\frac{m}{r}
+                \right)
+            \right]
+            \frac{e^{-jkr}}{r}
+            \frac{\vec{A}_{n,\text{t}}(\theta, \phi)}{r^n}\\
+            &=(n-m)\frac{e^{-jkr}}{r}
+            \frac{\vec{A}_{n,\text{t}}(\theta, \phi)}{r^{n+1}}    
+        \end{aligned}
+    \end{equation}
+    其中，下标 $\text{t}$ 表示相对于径向的横向矢量部分。
+\end{lemma}
+
+\begin{lemma}
+    \begin{equation}
+        \begin{aligned}
+            \mathcal{L}_m \left[
+                \nabla_{\text{t}}\left(
+                    \frac{e^{-jkr}}{r}
+                    \frac{\vec{A}_{n,r}(\theta, \phi)}{r^n}
+                \right)
+            \right]
+            &=
+            \frac{n+1-m}{r}
+            \left(
+                \vec{\theta}\frac{1}{r}\frac{\partial}{\partial \theta}
+                +\vec{\phi}\frac{1}{r\sin\theta}\frac{\partial}{\partial \phi}
+            \right)
+            \frac{e^{-jkr}}{r}
+            \frac{\vec{A}_{n,r}(\theta, \phi)}{r^n}\\
+            &=(n+1-m)\nabla_{\text{t}}\left(
+                \frac{e^{-jkr}}{r}
+                \frac{\vec{A}_{n,r}(\theta, \phi)}{r^{n+1}}
+            \right)
+        \end{aligned}
+    \end{equation}
+    其中，下标 $r$ 表示相关矢量的径向分量。
+\end{lemma}
+
+\par 由观察可得，在上面两种情况中，$\mathcal{L}_m$ 的作用是产生
+一个整数并将 $r$ 的幂指数增加 1。
+
+\begin{definition}{微分算子}
+    定义一个微分算子为
+    \begin{equation}
+        \mathcal{B}_m\vec{u}
+        =(\mathcal{L}_{m-1})^m \vec{u}_{\text{t}}
+        +s (\mathcal{L}_{m})^{m-1} \nabla_{\text{t}}u_{r}
+        \qquad
+        m=1,2,3,\cdots
+    \end{equation}
+    其中，$s$ 是一个任意数。
+\end{definition}
+
+\begin{lemma}
+    \begin{equation}
+        \begin{aligned}
+            \mathcal{B}_m \left[
+                \frac{e^{-jkr}}{r}
+                \frac{\vec{A}_{n}(\theta, \phi)}{r^n}
+            \right]
+            =&\ (n+1-m)(n+2-m)\cdots(n-1)n 
+            \frac{e^{-jkr}}{r}
+            \frac{\vec{A}_{n,\text{t}}(\theta, \phi)}{r^{n+m}}\\
+            &+s(n+1-m)(n+2-m)\cdots(n-2)(n-1)
+            \nabla_{\text{t}}\left(
+                \frac{e^{-jkr}}{r}
+                \frac{\vec{A}_{n,r}(\theta, \phi)}{r^{n+m-1}}
+            \right)
+        \end{aligned}
+    \end{equation}
+\end{lemma}
+
+\begin{theorem}{微分算子的性质}
+    由于场的展开式中有 $A_{0,r}=0$，
+    因而当 $n=0,1,2,\cdots,m-1$ 时，
+    式 (\ref{矢量波函数解}) 的右边项为零。
+    \begin{equation}
+        \mathcal{B}_m\vec{E}=
+        \mathcal{O}\left(
+            \rho^{-2m-1}
+        \right)
+    \end{equation}
+\end{theorem}
+
+\begin{theorem}{一阶吸收边界条件}
+    考虑 $m=1$，可以得到
+    \begin{equation}
+        \mathcal{B}_1\vec{E}
+        =\vec{r}\times\nabla \times\vec{E}_{\text{t}}
+        -jk\vec{E}_{\text{t}}+s\nabla_{\text{t}}E_r\approx 0
+    \end{equation}
+    由于 $\vec{r}\times\nabla \times(\vec{r}E_r)
+    =\nabla_{\text{t}}E_r$，上式可以写成
+    \begin{equation}
+        \vec{r}\times\nabla \times\vec{E}
+        \approx
+        -jk\vec{r}\times\vec{r}\times\vec{E}-(s-1)\nabla_{\text{t}}E_r
+    \end{equation}
+    选择 $s=1$ 得到定理 \ref{thm:一阶吸收边界条件} 中的 Sommerfeld 辐射条件。
+
+    当此条件应用于平面时，对于横电场和横磁场平面波，其反射系数为
+    \begin{equation}
+        R_{\text{TE}}
+        =R_{\text{TM}}
+        =\frac{\cos \theta - 1}{\cos \theta + 1}
+    \end{equation}
+\end{theorem}
+
+\begin{theorem}{二阶吸收边界条件}
+    考虑 $m=2$，可以得到
+    \begin{equation}
+        \begin{aligned}
+            \mathcal{B}_2\vec{E}
+            = &\ (\mathcal{L}_1)^2\vec{E}_{\text{t}}
+            + s \mathcal{L}_2 \nabla_{\text{t}}E_r\\
+            = &-2\left(
+                jk+\frac{1}{r}
+            \right)\vec{r}\times\nabla \times\vec{E}
+            +2jk\left(
+                jk+\frac{1}{r}
+            \right)\vec{E}_{\text{t}}
+            +\nabla\times\left[ 
+                \vec{r}\vec{r}\cdot\left(\nabla\times\vec{E}\right)
+                \right]\\
+            &+(s-1)\nabla_{\text{t}}
+            (\nabla_{\text{t}}\cdot \vec{E})
+            +(2-s)jk\nabla_{\text{t}}E_r
+        \end{aligned}
+    \end{equation}
+    此处选择 $s=2$，将含有 $\nabla_{\text{t}}E_r$ 的项消除，
+    得到近似的二阶吸收边界条件
+    \begin{equation}
+        \vec{r}\times\nabla \times\vec{E}
+        \approx
+        -jk\vec{r}\times\vec{r}\times\vec{E}
+        +\frac{r}{2(jkr+1)}
+        \Bigg\{
+            \nabla\times\left[
+                \vec{r}\vec{r}\cdot\left(\nabla\times\vec{E}\right)
+            \right]
+            +\nabla_{\text{t}}
+            \left(\nabla_{\text{t}}\cdot \vec{E}\right)
+        \Bigg\}
+    \end{equation}
+    当此条件应用于平面时，对于横电场平面波，其反射系数为
+    \begin{equation}
+        R_{\text{TE}}
+        =\frac{\cos \theta+\frac{1}{2}\sin^2 \theta-1}
+        {\cos \theta-\frac{1}{2}\sin^2 \theta+1}
+    \end{equation}
+    对于横磁场平面波，其反射系数为
+    \begin{equation}
+        R_{\text{TE}}
+        =\frac{\cos \theta+\frac{1}{2}\sin^2 \theta\cos \theta-1}
+        {\cos \theta+\frac{1}{2}\sin^2 \theta\cos \theta+1}
+    \end{equation}
 \end{theorem}
 
 \subsection{理想匹配层}
